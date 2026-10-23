@@ -9,3 +9,8 @@ CREATE TABLE IF NOT EXISTS users (
  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
  CONSTRAINT fk_users_profile FOREIGN KEY (profile_id) REFERENCES profile(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Fix: some older setups created skill.id without AUTO_INCREMENT, which makes
+-- skill_create.php fail with "Field 'id' doesn't have a default value" (HTTP 500).
+-- Safe to run even if id is already AUTO_INCREMENT; existing rows are kept.
+ALTER TABLE skill MODIFY id INT NOT NULL AUTO_INCREMENT;
